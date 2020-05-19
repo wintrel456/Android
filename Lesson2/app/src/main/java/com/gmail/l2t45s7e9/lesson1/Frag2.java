@@ -1,4 +1,4 @@
-package com.a65apps.l2T45S7E9.lesson2;
+package com.gmail.l2t45s7e9.lesson1;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,17 +22,17 @@ public class Frag2 extends Fragment {
 
         int id = this.getArguments().getInt("id",0);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Детали контакта: "+Frag1.people[id].getName());
-        TextView name = (TextView)view.findViewById(R.id.textView6);
+        TextView name = view.findViewById(R.id.textView6);
         name.setText(Frag1.people[id].getName());
-        TextView telephoneNumber = (TextView)view.findViewById(R.id.textView7);
+        TextView telephoneNumber = view.findViewById(R.id.textView7);
         telephoneNumber.setText(Frag1.people[id].getTelephoneNumber());
-        TextView telephoneNumber2 = (TextView)view.findViewById(R.id.textView8);
+        TextView telephoneNumber2 = view.findViewById(R.id.textView8);
         telephoneNumber2.setText(Frag1.people[id].getTelephoneNumber2());
-        TextView email = (TextView)view.findViewById(R.id.textView9);
+        TextView email = view.findViewById(R.id.textView9);
         email.setText(Frag1.people[id].getEmail());
         TextView email2 = (TextView)view.findViewById(R.id.textView10);
         email2.setText(Frag1.people[id].getEmail2());
-        TextView description = (TextView)view.findViewById(R.id.textView11);
+        TextView description = view.findViewById(R.id.textView11);
         description.setText(Frag1.people[id].getDescription());
         return view;
     }

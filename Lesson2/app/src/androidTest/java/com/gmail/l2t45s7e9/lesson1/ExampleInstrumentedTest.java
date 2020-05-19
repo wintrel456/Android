@@ -1,4 +1,4 @@
-package com.a65apps.l2T45S7E9.lesson2;
+package com.gmail.l2t45s7e9.lesson1;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.a65apps.l2T45S7E9.lesson2", appContext.getPackageName());
+        assertEquals("com.gmail.l2t45s7e9.lesson1", appContext.getPackageName());
     }
 }

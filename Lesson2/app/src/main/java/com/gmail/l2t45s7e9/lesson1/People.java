@@ -1,4 +1,4 @@
-package com.a65apps.l2T45S7E9.lesson2;
+package com.gmail.l2t45s7e9.lesson1;
 
 public class People {
     private final String name;

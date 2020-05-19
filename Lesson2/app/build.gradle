@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.a65apps.l2T45S7E9.lesson2"
+        applicationId "com.gmail.l2t45s7e9.lesson1"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

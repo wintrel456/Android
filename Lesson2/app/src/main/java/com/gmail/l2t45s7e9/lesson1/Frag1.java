@@ -1,4 +1,4 @@
-package com.a65apps.l2T45S7E9.lesson2;
+package com.gmail.l2t45s7e9.lesson1;
 
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ public class Frag1 extends ListFragment {
     private static People first = new People("Иван", "+7919 151 6321", "999", "1@gmail.com", "3@gmail.com", "Описание");
     private static People second = new People("Дима", "+7912 112 4577", "888", "2@gmail.com", "4@gmail.com", "Описание");
     static People[] people = {first, second};
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
