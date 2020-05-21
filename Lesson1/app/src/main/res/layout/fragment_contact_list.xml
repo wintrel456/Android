@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contactListContainer"
+    android:layout_width="match_parent"
+    android:clickable="false"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".ContactListFragment"
+    android:focusable="false">
+
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="155dp"
+        android:layout_height="155dp"
+        android:layout_margin="10dp"
+        android:background="#E91E63"
+        android:contentDescription="@string/app_name"
+        android:focusable="false"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <LinearLayout
+        android:id="@+id/textBlock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name" />
+
+        <TextView
+            android:id="@+id/textViewTelephoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/telephoneNumber" />
+    </LinearLayout>
+
+
+</LinearLayout>
+

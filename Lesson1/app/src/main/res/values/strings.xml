@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Lesson1</string>
+    <string name="app_name">Контакты</string>
+    <string name="name">name</string>
+    <string name="telephoneNumber">telephoneNumber</string>
+    <string name="telephoneNumber2">telephoneNumber2</string>
+    <string name="email">email</string>
+    <string name="email2">email2</string>
+    <string name="description">description</string>
+    <string name="ContactListTitle">Cписок контактов</string>
+    <string name="ContactDetailsTitle">Детали контакта</string>
 </resources>
