@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.ListFragment;
 
-public class Frag1 extends ListFragment {
+public class ContactListFragment extends ListFragment {
     private static People first = new People("Иван", "+7919 151 6321", "999", "1@gmail.com", "3@gmail.com", "Описание");
     private static People second = new People("Дима", "+7912 112 4577", "888", "2@gmail.com", "4@gmail.com", "Описание");
     static People[] people = {first, second};
@@ -20,17 +20,17 @@ public class Frag1 extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Список контактов");
+        getActivity().setTitle(R.string.ContactListTitle);
         ArrayAdapter<People> contactArrayAdapter = new ArrayAdapter<People>(getActivity(), 0, people) {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View listItem = convertView;
                 if (listItem == null)
-                    listItem = getLayoutInflater().inflate(R.layout.fragment1, null, false);
+                    listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
                 People curMember = people[position];
-                TextView name = (TextView) listItem.findViewById(R.id.textView6);
+                TextView name = listItem.findViewById(R.id.textViewName);
                 name.setText(curMember.getName());
-                TextView telephoneNumber = (TextView) listItem.findViewById(R.id.textView7);
+                TextView telephoneNumber = (TextView) listItem.findViewById(R.id.textViewTelephoneNumber);
                 telephoneNumber.setText(curMember.getTelephoneNumber());
                 return listItem;
             }
@@ -42,10 +42,10 @@ public class Frag1 extends ListFragment {
         showDetails(position);
     }
     private void showDetails(int position) {
-        Frag2 frag2 = Frag2.newInstance(position);
+        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.c1, frag2).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.contactContainer, contactDetailsFragment).addToBackStack(null).commit();
     }
 
 }
