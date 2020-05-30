@@ -29,7 +29,7 @@ public class ContactListFragment extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        final View view = super.onCreateView(inflater, container, savedInstanceState);
         getActivity().setTitle(R.string.ContactListTitle);
         ContactList callback = new ContactList() {
             @Override
@@ -41,22 +41,25 @@ public class ContactListFragment extends ListFragment {
                         View listItem = convertView;
                         if (listItem == null)
                             listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
-                        People curMember = people[position];
-                        TextView name = listItem.findViewById(R.id.textViewName);
-                        name.setText(curMember.getName());
-                        TextView telephoneNumber = (TextView) listItem.findViewById(R.id.textViewTelephoneNumber);
-                        telephoneNumber.setText(curMember.getTelephoneNumber());
+                        final People curMember = people[position];
+                        final TextView name = listItem.findViewById(R.id.textViewName);
+                        final TextView telephoneNumber = listItem.findViewById(R.id.textViewTelephoneNumber);
+                        view.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                name.setText(curMember.getName());
+                                telephoneNumber.setText(curMember.getTelephoneNumber());
+                            }
+                        });
                         return listItem;
                     }
                 };
                 setListAdapter(contactArrayAdapter);
             }
-
         };
         contactService.getContactList(callback);
         return view;
     }
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         showDetails(position);

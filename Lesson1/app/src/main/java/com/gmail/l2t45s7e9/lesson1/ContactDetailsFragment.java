@@ -35,19 +35,25 @@ public class ContactDetailsFragment extends Fragment {
             @Override
             public void getContactDetails(People result) {
                 final People people = result;
-                getActivity().setTitle(getString(R.string.ContactDetailsTitle) +": "+ people.getName());
-                TextView name = view.findViewById(R.id.textViewName);
-                name.setText(people.getName());
-                TextView telephoneNumber = view.findViewById(R.id.textViewTelephoneNumber);
-                telephoneNumber.setText(people.getTelephoneNumber());
-                TextView telephoneNumber2 = view.findViewById(R.id.textViewTelephoneNumber2);
-                telephoneNumber2.setText(people.getTelephoneNumber2());
-                TextView email = view.findViewById(R.id.textViewEmail);
-                email.setText(people.getEmail());
-                TextView email2 = view.findViewById(R.id.textViewEmail2);
-                email2.setText(people.getEmail2());
-                TextView description = view.findViewById(R.id.textViewDescription);
-                description.setText(people.getDescription());
+                final TextView name = view.findViewById(R.id.textViewName);
+                final TextView telephoneNumber = view.findViewById(R.id.textViewTelephoneNumber);
+                final TextView telephoneNumber2 = view.findViewById(R.id.textViewTelephoneNumber2);
+                final TextView email = view.findViewById(R.id.textViewEmail);
+                final TextView email2 = view.findViewById(R.id.textViewEmail2);
+                final TextView description = view.findViewById(R.id.textViewDescription);
+
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getActivity().setTitle(getString(R.string.ContactDetailsTitle) +": "+ people.getName());
+                        name.setText(people.getName());
+                        telephoneNumber.setText(people.getTelephoneNumber());
+                        telephoneNumber2.setText(people.getTelephoneNumber2());
+                        email.setText(people.getEmail());
+                        email2.setText(people.getEmail2());
+                        description.setText(people.getDescription());
+                    }
+                });
             }
         };
 
