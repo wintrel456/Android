@@ -35,26 +35,28 @@ public class ContactListFragment extends ListFragment {
             @Override
             public void getContactList(People[] result) {
                 final People[] people = result;
-                ArrayAdapter<People> contactArrayAdapter = new ArrayAdapter<People>(getActivity(), 0, people) {
+                view.post(new Runnable() {
                     @Override
-                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View listItem = convertView;
-                        if (listItem == null)
-                            listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
-                        final People curMember = people[position];
-                        final TextView name = listItem.findViewById(R.id.textViewName);
-                        final TextView telephoneNumber = listItem.findViewById(R.id.textViewTelephoneNumber);
-                        view.post(new Runnable() {
+                    public void run() {
+                        ArrayAdapter<People> contactArrayAdapter = new ArrayAdapter<People>(getActivity(), 0, people) {
                             @Override
-                            public void run() {
+                            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                View listItem = convertView;
+                                if (listItem == null)
+                                    listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
+                                final People curMember = people[position];
+                                final TextView name = listItem.findViewById(R.id.textViewName);
+                                final TextView telephoneNumber = listItem.findViewById(R.id.textViewTelephoneNumber);
                                 name.setText(curMember.getName());
                                 telephoneNumber.setText(curMember.getTelephoneNumber());
+                                return listItem;
                             }
-                        });
-                        return listItem;
+                        };
+                        setListAdapter(contactArrayAdapter);
                     }
-                };
-                setListAdapter(contactArrayAdapter);
+                });
+
+
             }
         };
         contactService.getContactList(callback);

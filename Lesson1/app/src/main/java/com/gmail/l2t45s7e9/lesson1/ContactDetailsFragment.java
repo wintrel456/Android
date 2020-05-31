@@ -41,19 +41,21 @@ public class ContactDetailsFragment extends Fragment {
                 final TextView email = view.findViewById(R.id.textViewEmail);
                 final TextView email2 = view.findViewById(R.id.textViewEmail2);
                 final TextView description = view.findViewById(R.id.textViewDescription);
+                if(view!=null){
+                    view.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().setTitle(getString(R.string.ContactDetailsTitle) +": "+ people.getName());
+                            name.setText(people.getName());
+                            telephoneNumber.setText(people.getTelephoneNumber());
+                            telephoneNumber2.setText(people.getTelephoneNumber2());
+                            email.setText(people.getEmail());
+                            email2.setText(people.getEmail2());
+                            description.setText(people.getDescription());
+                        }
+                    });
+                }
 
-                view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        getActivity().setTitle(getString(R.string.ContactDetailsTitle) +": "+ people.getName());
-                        name.setText(people.getName());
-                        telephoneNumber.setText(people.getTelephoneNumber());
-                        telephoneNumber2.setText(people.getTelephoneNumber2());
-                        email.setText(people.getEmail());
-                        email2.setText(people.getEmail2());
-                        description.setText(people.getDescription());
-                    }
-                });
             }
         };
 
