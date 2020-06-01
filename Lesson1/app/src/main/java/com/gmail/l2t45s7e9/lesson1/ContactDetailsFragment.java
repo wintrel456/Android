@@ -60,17 +60,29 @@ public class ContactDetailsFragment extends Fragment {
                         if(getActivity()!=null){
                             getActivity().setTitle(getString(R.string.ContactDetailsTitle) +": "+ people.getName());
                         }
-                        name.setText(people.getName());
-                        telephoneNumber.setText(people.getTelephoneNumber());
-                        telephoneNumber2.setText(people.getTelephoneNumber2());
-                        email.setText(people.getEmail());
-                        email2.setText(people.getEmail2());
-                        description.setText(people.getDescription());
+						if(name!=null){
+							name.setText(people.getName());
+							telephoneNumber.setText(people.getTelephoneNumber());
+							telephoneNumber2.setText(people.getTelephoneNumber2());
+							email.setText(people.getEmail());
+							email2.setText(people.getEmail2());
+							description.setText(people.getDescription());
+						}
+                        
                     }
                 });
             }
 
         }
     };
-
+	@Override
+	public void onDestroyView(){
+		super.onDestroyView();
+		name=null;
+		telephoneNumber=null;
+		telephoneNumber2=null;
+		email=null;
+		email2=null;
+		description=null;
+	}
 }
