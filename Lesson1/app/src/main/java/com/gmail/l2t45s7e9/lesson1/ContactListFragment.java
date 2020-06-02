@@ -1,7 +1,10 @@
 package com.gmail.l2t45s7e9.lesson1;
 
 import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,29 +16,51 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.ListFragment;
 
 public class ContactListFragment extends ListFragment {
-    private static People first = new People("Иван", "+7919 151 6321", "999", "1@gmail.com", "3@gmail.com", "Описание");
-    private static People second = new People("Дима", "+7912 112 4577", "888", "2@gmail.com", "4@gmail.com", "Описание");
-    static People[] people = {first, second};
 
+    interface ContactList{
+        void getContactList(People[] people);
+    }
+    ContactService contactService;
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        contactService = ((ContactService.Informator)context).getService();
+    }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = super.onCreateView(inflater, container, savedInstanceState);
         getActivity().setTitle(R.string.ContactListTitle);
-        ArrayAdapter<People> contactArrayAdapter = new ArrayAdapter<People>(getActivity(), 0, people) {
+        ContactList callback = new ContactList() {
             @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View listItem = convertView;
-                if (listItem == null)
-                    listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
-                People curMember = people[position];
-                TextView name = listItem.findViewById(R.id.textViewName);
-                name.setText(curMember.getName());
-                TextView telephoneNumber = (TextView) listItem.findViewById(R.id.textViewTelephoneNumber);
-                telephoneNumber.setText(curMember.getTelephoneNumber());
-                return listItem;
+            public void getContactList(People[] result) {
+                final People[] people = result;
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayAdapter<People> contactArrayAdapter = new ArrayAdapter<People>(getActivity(), 0, people) {
+                            @Override
+                            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                View listItem = convertView;
+                                if (listItem == null)
+                                    listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
+                                final People curMember = people[position];
+                                final TextView name = listItem.findViewById(R.id.textViewName);
+                                final TextView telephoneNumber = listItem.findViewById(R.id.textViewTelephoneNumber);
+                                name.setText(curMember.getName());
+                                telephoneNumber.setText(curMember.getTelephoneNumber());
+                                return listItem;
+                            }
+                        };
+                        setListAdapter(contactArrayAdapter);
+                    }
+                });
+
+
             }
         };
-        setListAdapter(contactArrayAdapter);
+        contactService.getContactList(callback);
+        return view;
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -47,5 +72,6 @@ public class ContactListFragment extends ListFragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.contactContainer, contactDetailsFragment).addToBackStack(null).commit();
     }
+
 
 }
