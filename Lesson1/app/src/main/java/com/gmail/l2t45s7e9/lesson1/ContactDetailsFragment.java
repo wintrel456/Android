@@ -84,5 +84,6 @@ public class ContactDetailsFragment extends Fragment {
 		email=null;
 		email2=null;
 		description=null;
+		view=null;
 	}
 }
