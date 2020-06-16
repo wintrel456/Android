@@ -65,6 +65,22 @@
             android:layout_marginTop="20dp"
             android:text="@string/description" />
 
+        <TextView
+            android:id="@+id/textViewBirthDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/ContactBirthDate" />
+
+        <Switch
+            android:id="@+id/notificationSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/NotificationSwitch"
+            android:thumbTint="#FF1E63" />
+
     </LinearLayout>
 
 </LinearLayout>
