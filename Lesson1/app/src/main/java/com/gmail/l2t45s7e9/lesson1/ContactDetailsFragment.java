@@ -69,14 +69,8 @@ public class ContactDetailsFragment extends Fragment {
         contactService.getContactDetails(callback,id);
         nSwitch = view.findViewById(R.id.notificationSwitch);
         boolean alarmUp = (PendingIntent.getBroadcast(getContext(), id, new Intent("com.gmail.l2t45s7e9.lesson1"), PendingIntent.FLAG_NO_CREATE) != null);
-        if(alarmUp){
-            nSwitch.setChecked(true);
-            Switcher();
-        }
-        else {
-            nSwitch.setChecked(false);
-            Switcher();
-        }
+        nSwitch.setChecked(alarmUp);
+        switcher();
         return view;
     }
     private ContactDetails callback = new ContactDetails() {
@@ -99,9 +93,9 @@ public class ContactDetailsFragment extends Fragment {
 							email2.setText(people.getEmail2());
 							description.setText(people.getDescription());
 							birthDate.setText(R.string.ContactBirthDate);
-                            birthDate.append(" " + (people.getBirthDate()).get(Calendar.DATE)+" "+(people.getBirthDate()).getDisplayName(Calendar.MONTH,Calendar.LONG, new Locale("Ru")));
+                            birthDate.append(" " + people.getBirthDate().get(Calendar.DATE) + " "
+                                    + people.getBirthDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
 						}
-                        
                     }
                 });
             }
@@ -109,7 +103,7 @@ public class ContactDetailsFragment extends Fragment {
         }
     };
 
-    private void Switcher(){
+    private void switcher(){
         nSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
