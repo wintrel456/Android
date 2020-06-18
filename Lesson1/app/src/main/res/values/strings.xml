@@ -12,4 +12,6 @@
     <string name="ContactBirthDate">Дата рождения</string>
     <string name="bDay">Сегодня день рождения празднует </string>
     <string name="notificationBirthDay">Уведомление о дне рождения</string>
+    <string name="off">Выключено</string>
+    <string name="on">Включено</string>
 </resources>

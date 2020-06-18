@@ -5,8 +5,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -40,7 +39,8 @@ public class ContactDetailsFragment extends Fragment {
     private TextView birthDate;
     private Switch nSwitch;
     private People people;
-    int id;
+    private int id;
+
     static ContactDetailsFragment newInstance(int id) {
         ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
         Bundle args = new Bundle();
@@ -53,6 +53,8 @@ public class ContactDetailsFragment extends Fragment {
         super.onAttach(context);
         contactService = ((ContactService.Informator)context).getService();
     }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_contact_details, container, false);
@@ -66,47 +68,18 @@ public class ContactDetailsFragment extends Fragment {
         id = this.getArguments().getInt("id",0);
         contactService.getContactDetails(callback,id);
         nSwitch = view.findViewById(R.id.notificationSwitch);
-
-        boolean alarmUp = (PendingIntent.getBroadcast(getContext(), 0, new Intent(String.valueOf(getContext())), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean alarmUp = (PendingIntent.getBroadcast(getContext(), id, new Intent("com.gmail.l2t45s7e9.lesson1"), PendingIntent.FLAG_NO_CREATE) != null);
         if(alarmUp){
-            nSwitch.setChecked(false);
-            Toast.makeText(getContext().getApplicationContext(),
-                    "Выключено", Toast.LENGTH_SHORT).show();
+            nSwitch.setChecked(true);
+            Switcher();
         }
         else {
-            nSwitch.setChecked(true);
-            Toast.makeText(getContext().getApplicationContext(),
-                    "Включено", Toast.LENGTH_SHORT).show();
+            nSwitch.setChecked(false);
+            Switcher();
         }
-        nSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Intent intent = new Intent(getContext(), NotificationReceiver.class);
-                AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-                intent.putExtra("birthDateName", people.getName());
-                PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(),0,intent,0);
-                if(isChecked){
-                    Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
-                    calendar.set(Calendar.DATE,people.getBirthDate().get(Calendar.DATE));
-                    System.out.println(people.getBirthDate().get(Calendar.DATE));
-                    calendar.set(Calendar.MONTH,people.getBirthDate().get(Calendar.MONTH));
-                    if (System.currentTimeMillis() > calendar.getTimeInMillis()){
-
-                        calendar.add(Calendar.YEAR,1);
-                    }
-
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),alarmIntent);
-                }
-                else{
-                    alarmManager.cancel(alarmIntent);
-                }
-
-            }
-        });
-
         return view;
     }
-    ContactDetails callback = new ContactDetails() {
+    private ContactDetails callback = new ContactDetails() {
         @Override
         public void getContactDetails(People result) {
             people = result;
@@ -125,7 +98,8 @@ public class ContactDetailsFragment extends Fragment {
 							email.setText(people.getEmail());
 							email2.setText(people.getEmail2());
 							description.setText(people.getDescription());
-                            birthDate.setText("День рождения: "+(people.getBirthDate()).get(Calendar.DATE)+" "+(people.getBirthDate()).getDisplayName(Calendar.MONTH,Calendar.LONG, new Locale("Ru")));
+							birthDate.setText(R.string.ContactBirthDate);
+                            birthDate.append(" " + (people.getBirthDate()).get(Calendar.DATE)+" "+(people.getBirthDate()).getDisplayName(Calendar.MONTH,Calendar.LONG, new Locale("Ru")));
 						}
                         
                     }
@@ -135,6 +109,45 @@ public class ContactDetailsFragment extends Fragment {
         }
     };
 
+    private void Switcher(){
+        nSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Intent intent = new Intent("com.gmail.l2t45s7e9.lesson1");
+                AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
+                intent.putExtra("birthDateName", people.getName());
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(),id,intent,0);
+                if(isChecked){
+                    GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
+                    calendar.set(Calendar.DATE,people.getBirthDate().get(Calendar.DATE));
+                    calendar.set(Calendar.MONTH,people.getBirthDate().get(Calendar.MONTH));
+                    if (System.currentTimeMillis() > calendar.getTimeInMillis()){
+                        if((!calendar.isLeapYear(calendar.get(Calendar.YEAR)+1)) && calendar.get(Calendar.MONTH)==Calendar.FEBRUARY && calendar.get(Calendar.DATE)==29){
+                            calendar.roll(Calendar.YEAR,1);
+                            calendar.roll(Calendar.DATE,-1);
+                        }
+                        else{
+                            calendar.add(Calendar.YEAR,1);
+                        }
+
+                    }
+                    else if(!calendar.isLeapYear(calendar.get(Calendar.YEAR))){
+                        calendar.set(Calendar.DATE,people.getBirthDate().get(Calendar.DATE)-1);
+                    }
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),alarmIntent);
+                    Toast.makeText(Objects.requireNonNull(getContext()).getApplicationContext(),
+                            R.string.on, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    alarmManager.cancel(alarmIntent);
+                    alarmIntent.cancel();
+                    Toast.makeText(Objects.requireNonNull(getContext()).getApplicationContext(),
+                            R.string.off, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
 
     @Override
 	public void onDestroyView(){

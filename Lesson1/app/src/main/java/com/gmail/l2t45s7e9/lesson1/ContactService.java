@@ -14,7 +14,7 @@ public class ContactService extends Service {
         ContactService getService();
     }
     private static People first = new People("Иван", "+7919 151 6321", "999", "1@gmail.com", "3@gmail.com", "Описание",new GregorianCalendar(1985, Calendar.JUNE,6));
-    private static People second = new People("Дима", "+7912 112 4577", "888", "2@gmail.com", "4@gmail.com", "Описание",new GregorianCalendar(1985, Calendar.JUNE,7));
+    private static People second = new People("Дима", "+7912 112 4577", "888", "2@gmail.com", "4@gmail.com", "Описание",new GregorianCalendar(1985, Calendar.JUNE,18));
     static People[] people = {first, second};
     IBinder binder = new LocalBinder();
 
