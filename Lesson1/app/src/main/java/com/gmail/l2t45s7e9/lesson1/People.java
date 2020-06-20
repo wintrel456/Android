@@ -1,5 +1,7 @@
 package com.gmail.l2t45s7e9.lesson1;
 
+import java.util.GregorianCalendar;
+
 public class People {
     private final String name;
     private final String telephoneNumber;
@@ -7,16 +9,17 @@ public class People {
     private final  String email;
     private final  String email2;
     private final  String description;
+    private final GregorianCalendar birthDate;
 
 
-
-    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description){
+    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, GregorianCalendar birthDate ){
         this.name = name;
         this.telephoneNumber = telephoneNumber;
         this.email = email;
         this.telephoneNumber2 = telephoneNumber2;
         this.email2 = email2;
         this.description = description;
+        this.birthDate=birthDate;
     }
 
 
@@ -39,4 +42,5 @@ public class People {
     public String getDescription() {
         return description;
     }
+    public GregorianCalendar getBirthDate(){return birthDate;}
 }
