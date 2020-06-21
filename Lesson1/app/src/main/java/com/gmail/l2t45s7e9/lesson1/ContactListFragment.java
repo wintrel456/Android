@@ -15,10 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.ListFragment;
 
+import java.util.ArrayList;
+
 public class ContactListFragment extends ListFragment {
 
     interface ContactList{
-        void getContactList(People[] people);
+        void getContactList(ArrayList<People> people);
     }
     ContactService contactService;
     @Override
@@ -33,8 +35,8 @@ public class ContactListFragment extends ListFragment {
         getActivity().setTitle(R.string.ContactListTitle);
         ContactList callback = new ContactList() {
             @Override
-            public void getContactList(People[] result) {
-                final People[] people = result;
+            public void getContactList(ArrayList<People> result) {
+                final ArrayList<People> people = result;
                 view.post(new Runnable() {
                     @Override
                     public void run() {
@@ -44,7 +46,7 @@ public class ContactListFragment extends ListFragment {
                                 View listItem = convertView;
                                 if (listItem == null)
                                     listItem = getLayoutInflater().inflate(R.layout.fragment_contact_list, null, false);
-                                final People curMember = people[position];
+                                final People curMember = people.get(position);
                                 final TextView name = listItem.findViewById(R.id.textViewName);
                                 final TextView telephoneNumber = listItem.findViewById(R.id.textViewTelephoneNumber);
                                 name.setText(curMember.getName());
