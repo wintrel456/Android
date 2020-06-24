@@ -1,6 +1,7 @@
 package com.gmail.l2t45s7e9.lesson1;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -18,54 +19,61 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class ContactService extends Service {
 
     interface Informator{
         ContactService getService();
     }
-    ArrayList<People> contacts = new ArrayList<People>();
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    @SuppressLint("Recycle")
+    public ArrayList<People> onLoadContacts() {
+        ArrayList<People> contacts = new ArrayList<People>();
         ContentResolver contentResolver = getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
-                new String[] {ContactsContract.Contacts.HAS_PHONE_NUMBER,
-                        ContactsContract.Data.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Email.ADDRESS,
-                        ContactsContract.CommonDataKinds.Phone.NUMBER},
-                null,
-                null,
-                ContactsContract.Data.DISPLAY_NAME);
+        Cursor cursor = null;
+        try {
+            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
 
-        if(cursor!=null){
+            if (cursor != null) {
 
-            while (cursor.moveToNext()){
-                String hasNumber = cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-
-                String email = cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
-                String name = cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                String number = cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                if(hasNumber.equalsIgnoreCase("1") && !name.equalsIgnoreCase(number)){
-                        People people = new People(name,number,number,email ,email,getString(R.string.description) , new GregorianCalendar(1985, Calendar.JUNE,18) );
-                        contacts.add(people);
+                while (cursor.moveToNext()) {
+                    String[] number = new String[2];
+                    String id = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    String name = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    String hasnumber = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                    if(hasnumber.equalsIgnoreCase("1")){
+                        number = getContactNumbers(id);
                     }
+                    String[] email = getContactEmails(id);
+                    String birthday = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+                    People people = new People(name, number[0], number[1], email[0], email[1], getString(R.string.description), birthday);
+                    contacts.add(people);
                 }
             }
-            cursor.close();
+        } finally{
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+        return contacts;
     }
 
     IBinder binder = new LocalBinder();
@@ -91,7 +99,7 @@ public class ContactService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                People result = contacts.get(id);
+                People result = onLoadContacts().get(id);
                 ContactDetailsFragment.ContactDetails local = ref.get();
                 if (local != null){
                     local.getContactDetails(result);
@@ -106,13 +114,73 @@ public class ContactService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<People> result = contacts;
+                ArrayList<People> result = onLoadContacts();
                 ContactListFragment.ContactList local = ref.get();
                 if (local != null){
                     local.getContactList(result);
                 }
             }
         }).start();
+    }
+    public String[] getContactNumbers(String id) {
+        int countNumbers = 0;
+        String[] numbers = new String[2];
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursorNumber = null;
+        try {
+            cursorNumber = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                    null,
+                    null);
+            if(cursorNumber!=null){
+                while (cursorNumber.moveToNext()) {
+                    if (countNumbers == 0 || countNumbers == 1){
+                        numbers[countNumbers] = cursorNumber.getString(
+                                cursorNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                    }
+                    countNumbers++;
+                }
+            }
+
+
+        }finally {
+            if (cursorNumber != null){
+                cursorNumber.close();
+            }
+        }
+        return numbers;
+    }
+    public String[] getContactEmails(String id) {
+        int countEmails = 0;
+        String[] emails = new String[2];
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursorEmail = null;
+        try {
+            cursorEmail = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + id,
+                    null,
+                    null);
+            if(cursorEmail!=null){
+                while (cursorEmail.moveToNext()) {
+                    if (countEmails == 0 || countEmails == 1){
+                        emails[countEmails] = cursorEmail.getString(
+                                cursorEmail.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA));
+
+                    }
+                    countEmails++;
+                }
+            }
+
+
+        }finally {
+            if (cursorEmail != null){
+                cursorEmail.close();
+            }
+        }
+        return emails;
     }
 
 }

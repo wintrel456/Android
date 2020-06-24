@@ -10,10 +10,10 @@ public class People {
     private final  String email;
     private final  String email2;
     private final  String description;
-    private final GregorianCalendar birthDate;
+    private final  String birthDate;
 
 
-    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, GregorianCalendar birthDate ){
+    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, String birthDate ){
         this.name = name;
         this.telephoneNumber = telephoneNumber;
         this.email = email;
@@ -43,7 +43,7 @@ public class People {
     public String getDescription() {
         return description;
     }
-    public GregorianCalendar getBirthDate(){return birthDate;}
+    public String getBirthDate(){return birthDate;}
 
 
 }
