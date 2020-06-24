@@ -126,12 +126,12 @@ public class ContactService extends Service {
     }
 
 
-    public void getContactDetails(ContactDetailsFragment.ContactDetails callback, final String idContact){
+    public void getContactDetails(ContactDetailsFragment.ContactDetails callback, final String id){
         final WeakReference<ContactDetailsFragment.ContactDetails> ref = new WeakReference<>(callback);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                People result = onLoadDetails(idContact);
+                People result = onLoadDetails(id);
                 ContactDetailsFragment.ContactDetails local = ref.get();
                 if (local != null){
                     local.getContactDetails(result);

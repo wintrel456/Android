@@ -66,9 +66,9 @@ public class ContactListFragment extends ListFragment {
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        showDetails(position);
+        showDetails(String.valueOf(position));
     }
-    private void showDetails(int position) {
+    private void showDetails(String position) {
         ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
