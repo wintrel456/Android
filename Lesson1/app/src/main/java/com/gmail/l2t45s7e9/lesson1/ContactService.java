@@ -35,7 +35,6 @@ public class ContactService extends Service {
         ContactService getService();
     }
 
-
     @SuppressLint("Recycle")
     public ArrayList<People> onLoadContacts() {
         ArrayList<People> contacts = new ArrayList<People>();
@@ -61,10 +60,8 @@ public class ContactService extends Service {
                     if(hasnumber.equalsIgnoreCase("1")){
                         number = getContactNumbers(id);
                     }
-                    String[] email = getContactEmails(id);
-                    String birthday = cursor.getString(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
-                    People people = new People(name, number[0], number[1], email[0], email[1], getString(R.string.description), birthday);
+
+                    People people = new People(name, number[0], null, null, null, getString(R.string.description), null);
                     contacts.add(people);
                 }
             }
@@ -74,6 +71,42 @@ public class ContactService extends Service {
             }
         }
         return contacts;
+    }
+    public People onLoadDetails(int id){
+        People people = null;
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursor = null;
+        try {
+            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                    null,
+                    ContactsContract.Contacts._ID+"="+id,
+                    null,
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
+
+            if (cursor != null) {
+                    cursor.moveToNext();
+                    String[] number = new String[2];
+                    String cursorId = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    String name = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    String hasnumber = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                    if(hasnumber.equalsIgnoreCase("1")){
+                        number = getContactNumbers(cursorId);
+                    }
+                    String[] email = getContactEmails(cursorId);
+                    String birthday = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+                    people = new People(name, number[0], number[1], email[0], email[1], getString(R.string.description), birthday);
+
+            }
+        } finally{
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+        return people;
     }
 
     IBinder binder = new LocalBinder();
@@ -99,7 +132,7 @@ public class ContactService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                People result = onLoadContacts().get(id);
+                People result = onLoadDetails(id);
                 ContactDetailsFragment.ContactDetails local = ref.get();
                 if (local != null){
                     local.getContactDetails(result);

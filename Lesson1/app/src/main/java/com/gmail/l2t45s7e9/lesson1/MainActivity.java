@@ -18,7 +18,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 public class MainActivity extends AppCompatActivity implements ContactService.Informator {
-    private static boolean READ_CONTACTS_GRANTED =false;
     ContactService contactService;
     boolean bound;
     ServiceConnection serviceConnection;
@@ -32,13 +31,10 @@ public class MainActivity extends AppCompatActivity implements ContactService.In
         intent = new Intent(this,ContactService.class);
         int hasReadContactPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
         if(hasReadContactPermission == PackageManager.PERMISSION_GRANTED){
-            READ_CONTACTS_GRANTED = true;
+            serviceConnection();
         }
         else{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-        }
-        if (READ_CONTACTS_GRANTED){
-            serviceConnection();
         }
 
     }
@@ -46,11 +42,8 @@ public class MainActivity extends AppCompatActivity implements ContactService.In
 
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                READ_CONTACTS_GRANTED = true;
+                serviceConnection();
             }
-        }
-        if(READ_CONTACTS_GRANTED){
-            serviceConnection();
         }
         else{
             Toast.makeText(this, R.string.toastContactPermission, Toast.LENGTH_LONG).show();
