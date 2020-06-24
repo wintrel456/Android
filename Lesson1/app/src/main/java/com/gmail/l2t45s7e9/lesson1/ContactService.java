@@ -72,7 +72,7 @@ public class ContactService extends Service {
         }
         return contacts;
     }
-    public People onLoadDetails(int id){
+    public People onLoadDetails(String id){
         People people = null;
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = null;
@@ -126,13 +126,12 @@ public class ContactService extends Service {
     }
 
 
-    public void getContactDetails(ContactDetailsFragment.ContactDetails callback, int idContact){
+    public void getContactDetails(ContactDetailsFragment.ContactDetails callback, final String idContact){
         final WeakReference<ContactDetailsFragment.ContactDetails> ref = new WeakReference<>(callback);
-        final int id = idContact;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                People result = onLoadDetails(id);
+                People result = onLoadDetails(idContact);
                 ContactDetailsFragment.ContactDetails local = ref.get();
                 if (local != null){
                     local.getContactDetails(result);

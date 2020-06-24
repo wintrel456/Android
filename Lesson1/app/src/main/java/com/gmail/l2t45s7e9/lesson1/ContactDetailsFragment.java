@@ -42,12 +42,12 @@ public class ContactDetailsFragment extends Fragment {
     private TextView birthDate;
     private Switch nSwitch;
     private People people;
-    private int id;
+    private String id;
 
     static ContactDetailsFragment newInstance(int id) {
         ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt("id",id);
+        args.putInt("id", id);
         contactDetailsFragment.setArguments(args);
         return contactDetailsFragment;
     }
@@ -68,10 +68,11 @@ public class ContactDetailsFragment extends Fragment {
         email2 = view.findViewById(R.id.textViewEmail2);
         description = view.findViewById(R.id.textViewDescription);
         birthDate = view.findViewById(R.id.textViewBirthDate);
-        id = this.getArguments().getInt("id",0);
+        assert this.getArguments() != null;
+        id = this.getArguments().getString("id","0");
         contactService.getContactDetails(callback,id);
         nSwitch = view.findViewById(R.id.notificationSwitch);
-        boolean alarmUp = (PendingIntent.getBroadcast(getContext(), id, new Intent("com.gmail.l2t45s7e9.lesson1"), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean alarmUp = (PendingIntent.getBroadcast(getContext(), Integer.parseInt(id), new Intent("com.gmail.l2t45s7e9.lesson1"), PendingIntent.FLAG_NO_CREATE) != null);
         nSwitch.setChecked(alarmUp);
         switcher();
         return view;
@@ -112,7 +113,7 @@ public class ContactDetailsFragment extends Fragment {
                 Intent intent = new Intent("com.gmail.l2t45s7e9.lesson1");
                 AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
                 intent.putExtra("birthDateName", people.getName());
-                PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(),id,intent,0);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), Integer.parseInt(id),intent,0);
                 if(isChecked){
                     GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
                     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
