@@ -11,11 +11,12 @@
 
     <ImageView
         android:id="@+id/profilePicture"
-        android:layout_width="155dp"
-        android:layout_height="155dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="#E91E63"
         android:contentDescription="@string/app_name"
+        android:cropToPadding="false"
         android:focusable="false"
         android:src="@drawable/ic_launcher_foreground" />
 

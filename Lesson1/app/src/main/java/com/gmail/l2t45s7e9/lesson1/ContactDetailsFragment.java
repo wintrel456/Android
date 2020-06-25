@@ -17,7 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Objects;
@@ -39,12 +42,12 @@ public class ContactDetailsFragment extends Fragment {
     private TextView birthDate;
     private Switch nSwitch;
     private People people;
-    private int id;
+    private String id;
 
-    static ContactDetailsFragment newInstance(int id) {
+    static ContactDetailsFragment newInstance(String id) {
         ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt("id",id);
+        args.putString("id", id);
         contactDetailsFragment.setArguments(args);
         return contactDetailsFragment;
     }
@@ -65,10 +68,10 @@ public class ContactDetailsFragment extends Fragment {
         email2 = view.findViewById(R.id.textViewEmail2);
         description = view.findViewById(R.id.textViewDescription);
         birthDate = view.findViewById(R.id.textViewBirthDate);
-        id = this.getArguments().getInt("id",0);
+        id = this.getArguments().getString("id","0");
         contactService.getContactDetails(callback,id);
         nSwitch = view.findViewById(R.id.notificationSwitch);
-        boolean alarmUp = (PendingIntent.getBroadcast(getContext(), id, new Intent("com.gmail.l2t45s7e9.lesson1"), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean alarmUp = (PendingIntent.getBroadcast(getContext(), id.hashCode(), new Intent("com.gmail.l2t45s7e9.lesson1"), PendingIntent.FLAG_NO_CREATE) != null);
         nSwitch.setChecked(alarmUp);
         switcher();
         return view;
@@ -93,8 +96,7 @@ public class ContactDetailsFragment extends Fragment {
 							email2.setText(people.getEmail2());
 							description.setText(people.getDescription());
 							birthDate.setText(R.string.ContactBirthDate);
-                            birthDate.append(" " + people.getBirthDate().get(Calendar.DATE) + " "
-                                    + people.getBirthDate().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
+                            birthDate.append(" " + people.getBirthDate());
 						}
                     }
                 });
@@ -110,11 +112,19 @@ public class ContactDetailsFragment extends Fragment {
                 Intent intent = new Intent("com.gmail.l2t45s7e9.lesson1");
                 AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
                 intent.putExtra("birthDateName", people.getName());
-                PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(),id,intent,0);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), id.hashCode(),intent,0);
                 if(isChecked){
                     GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
-                    calendar.set(Calendar.DATE,people.getBirthDate().get(Calendar.DATE));
-                    calendar.set(Calendar.MONTH,people.getBirthDate().get(Calendar.MONTH));
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                    Calendar calendarFromString = Calendar.getInstance();
+                    try {
+                        calendarFromString.setTime(Objects.requireNonNull(sdf.parse(people.getBirthDate())));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    calendar.set(Calendar.DATE,calendarFromString.get(Calendar.DATE) );
+                    calendar.set(Calendar.MONTH,calendarFromString.get(Calendar.MONTH));
+                    calendar.set(Calendar.YEAR,calendarFromString.get(Calendar.YEAR));
                     if (System.currentTimeMillis() > calendar.getTimeInMillis()){
                         if((!calendar.isLeapYear(calendar.get(Calendar.YEAR)+1)) && calendar.get(Calendar.MONTH)==Calendar.FEBRUARY && calendar.get(Calendar.DATE)==29){
                             calendar.roll(Calendar.YEAR,1);
@@ -126,7 +136,7 @@ public class ContactDetailsFragment extends Fragment {
 
                     }
                     else if(!calendar.isLeapYear(calendar.get(Calendar.YEAR))){
-                        calendar.set(Calendar.DATE,people.getBirthDate().get(Calendar.DATE)-1);
+                        calendar.set(Calendar.DATE,calendarFromString.get(Calendar.DATE)-1);
                     }
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),alarmIntent);
                     Toast.makeText(Objects.requireNonNull(getContext()).getApplicationContext(),

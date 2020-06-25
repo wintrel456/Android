@@ -1,5 +1,6 @@
 package com.gmail.l2t45s7e9.lesson1;
 
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 
 public class People {
@@ -9,10 +10,11 @@ public class People {
     private final  String email;
     private final  String email2;
     private final  String description;
-    private final GregorianCalendar birthDate;
+    private final  String birthDate;
+    private  final  String id;
 
 
-    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, GregorianCalendar birthDate ){
+    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, String birthDate, String id  ){
         this.name = name;
         this.telephoneNumber = telephoneNumber;
         this.email = email;
@@ -20,6 +22,7 @@ public class People {
         this.email2 = email2;
         this.description = description;
         this.birthDate=birthDate;
+        this.id = id;
     }
 
 
@@ -42,5 +45,8 @@ public class People {
     public String getDescription() {
         return description;
     }
-    public GregorianCalendar getBirthDate(){return birthDate;}
+    public String getBirthDate(){return birthDate;}
+    public String getId(){return id;}
+
+
 }
