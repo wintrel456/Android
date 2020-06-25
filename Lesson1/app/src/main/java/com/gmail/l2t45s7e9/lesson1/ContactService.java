@@ -61,7 +61,7 @@ public class ContactService extends Service {
                         number = getContactNumbers(id);
                     }
 
-                    People people = new People(name, number[0], null, null, null, getString(R.string.description), null);
+                    People people = new People(name, number[0], null, null, null, getString(R.string.description), null, id);
                     contacts.add(people);
                 }
             }
@@ -98,7 +98,7 @@ public class ContactService extends Service {
                     String[] email = getContactEmails(cursorId);
                     String birthday = cursor.getString(
                             cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
-                    people = new People(name, number[0], number[1], email[0], email[1], getString(R.string.description), birthday);
+                    people = new People(name, number[0], number[1], email[0], email[1], getString(R.string.description), birthday, cursorId);
 
             }
         } finally{

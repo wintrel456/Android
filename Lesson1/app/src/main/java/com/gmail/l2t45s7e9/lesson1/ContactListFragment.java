@@ -22,7 +22,8 @@ public class ContactListFragment extends ListFragment {
     interface ContactList{
         void getContactList(ArrayList<People> people);
     }
-    ContactService contactService;
+    private ArrayList<People> people;
+    private ContactService contactService;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -36,7 +37,7 @@ public class ContactListFragment extends ListFragment {
         ContactList callback = new ContactList() {
             @Override
             public void getContactList(ArrayList<People> result) {
-                final ArrayList<People> people = result;
+                people = result;
                 view.post(new Runnable() {
                     @Override
                     public void run() {
@@ -66,10 +67,10 @@ public class ContactListFragment extends ListFragment {
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        showDetails(String.valueOf(position));
+        showDetails(position);
     }
-    private void showDetails(String position) {
-        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
+    private void showDetails(int position) {
+        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(people.get(position).getId());
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.contactContainer, contactDetailsFragment).addToBackStack(null).commit();

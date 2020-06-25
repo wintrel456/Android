@@ -11,9 +11,10 @@ public class People {
     private final  String email2;
     private final  String description;
     private final  String birthDate;
+    private  final  String id;
 
 
-    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, String birthDate ){
+    People(String name, String telephoneNumber, String telephoneNumber2, String email, String email2, String description, String birthDate, String id  ){
         this.name = name;
         this.telephoneNumber = telephoneNumber;
         this.email = email;
@@ -21,6 +22,7 @@ public class People {
         this.email2 = email2;
         this.description = description;
         this.birthDate=birthDate;
+        this.id = id;
     }
 
 
@@ -44,6 +46,7 @@ public class People {
         return description;
     }
     public String getBirthDate(){return birthDate;}
+    public String getId(){return id;}
 
 
 }
